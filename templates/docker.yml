@@ -43,5 +43,7 @@ include:
   stage: build
   extends: ['.docker:build:base']
   script:
-    - echo -e "🚀 docker builder"
-    - docker build --build-arg CONTAINER_VERSION=$CONTAINER_VERSION -t $CI_REGISTRY_IMAGE:$CONTAINER_VERSION .
+    - |
+      echo ""
+      echo -e "🚀 docker builder"
+      docker build --build-arg CONTAINER_VERSION=$CONTAINER_VERSION -t $CI_REGISTRY_IMAGE:$CONTAINER_VERSION .
