@@ -49,7 +49,13 @@ artifacts:
 
 ```yaml
 include:
-  component: registry.gitlab.com/your-group/gitlab-components/mkdocs-build
-  inputs:
-    docker_image: "registry.gitlab.com/your-group/containers/mkdocs:1.0.0"
+  - component: $CI_SERVER_FQDN/pl.rachuna-net/cicd/components/build/mkdocs@$COMPONENT_VERSION_BUILD
+  ### release
+  - local: _configs/release.yml
+
+🚀 build mkdocs project:
+  variables:
+    CONTAINER_IMAGE_MKDOCS: $CONTAINER_IMAGE_MKDOCS
+  rules:
+    - when: on_success
 ```

@@ -50,7 +50,16 @@ docker build \
 
 ```yaml
 include:
-  component: registry.gitlab.com/your-group/gitlab-components/docker-build
-  inputs:
-    container_version: "v1.3.0"
+  - component: $CI_SERVER_FQDN/pl.rachuna-net/cicd/components/build/docker@$COMPONENT_VERSION_BUILD
+    inputs:
+      docker_image: $CONTAINER_IMAGE_BUILD
+
+🚀 build docker image:
+  needs:
+    - job: 🕵 Set Version
+      artifacts: true
+  variables:
+    CONTAINER_VERSION: $RELEASE_CANDIDATE_VERSION
+  rules:
+    - when: on_success
 ```
