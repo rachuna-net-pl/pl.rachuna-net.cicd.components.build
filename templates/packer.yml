@@ -1,0 +1,37 @@
+---
+spec:
+  inputs:
+    docker_image:
+      default: registry.gitlab.com/pl.rachuna-net/containers/packer:1.0.0
+      description: The docker image to use for the job
+---
+variables:
+  CONTAINER_IMAGE_PACKER: $[[ inputs.docker_image ]]
+  PACKER_LOG: 0
+
+
+include:
+  - local: /source/logo.yml
+  - local: /source/input_variables_packer.yml
+
+
+.packer:build:base:
+  image: $CONTAINER_IMAGE_PACKER
+  stage: build
+  before_script:
+    - git config --global --add safe.directory ${CI_PROJECT_DIR}
+    - !reference [.logo]
+    - !reference [.input-variables-packer]
+    - packer init .
+
+
+💥 packer build:
+  extends: ['.packer:build:base']
+  script:
+    - |
+      for file in $(find pkrvars -type f -name "*.hcl"); do
+        echo "💥  build vm template for $file"
+        packer build -var-file=$file -debug .
+      done
+  rules:
+    - when: never
